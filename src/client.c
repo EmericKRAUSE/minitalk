@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:07:27 by ekrause           #+#    #+#             */
-/*   Updated: 2024/03/12 13:58:13 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/03/13 15:26:37 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,33 +31,72 @@ int	ft_count(char c)
 	return (i);
 }
 
-char	*str_to_binary(char c)
+int	ft_strlen(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
+
+char	*str_to_binary(char *str)
 {
 	char	*result;
+	int		len;
 	int		i;
+	int		j;
 	int		nb;
 
-	result = malloc(sizeof(char) * (ft_count(c) + 1));
-	i = 0;
-	nb = (int)c;
-	while (nb != 0)
+	len = (8 * ft_strlen(str));
+	result = malloc(sizeof(char) * (len + 1));
+	if (!result)
+		return (NULL);
+	j = 0;
+	while (j < len)
+		result[j++] = '0';
+	result[j] = '\0';
+	j = 0;
+	while (str[j])
 	{
-		result[i] = (nb % 2) + 48;
-		printf ("%c\n", result[i]);
-		nb /= 2;
-		i ++;
+		i = 7 + (j * 8);
+		nb = (int)str[j];
+		while (nb != 0)
+		{
+			result[i--] = (nb % 2) + 48;
+			nb /= 2;
+		}
+		j++;
 	}
-	result[i] = '\0';
-	return (result);
+	return(result);
+}
+
+void	send_signal(char *str, pid_t pid)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '1')
+			kill(pid, SIGUSR1);
+		else if (str[i] == '0')
+			kill(pid, SIGUSR2);
+		usleep(1000);
+		i++;
+	}
 }
 
 int main(int argc, char **argv)
 {
-	// if (argc != 2)
-	// 	return (1);
-	pid_t	pid = atoi(argv[1]);
-	char	*str = str_to_binary(argv[2][0]);
-	printf ("%s\n", str);
-	kill(pid, SIGUSR1);
+	pid_t	pid;
+	char	*str;
+	if (argc != 3)
+		return (1);
+	pid = atoi(argv[1]);
+	str = str_to_binary(argv[2]);
+	send_signal(str, pid);
+	free(str);
 	return (0);
 }
