@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 10:31:26 by ekrause           #+#    #+#             */
-/*   Updated: 2024/03/13 15:18:58 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/03/14 11:40:23 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	sig_handler(int signum)
 		char c = (int)number;
 		write(1, &c, 1);
 		string = ft_strdup(" ");
+		usleep(100);
 	}
 }
 
