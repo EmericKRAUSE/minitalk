@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 10:31:26 by ekrause           #+#    #+#             */
-/*   Updated: 2024/03/18 11:42:36 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/03/18 11:55:25 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,14 @@ void	sig_handler(int signum)
 	if (bit % 8 == 0)
 	{
 		if (is_end(character))
-			write(1, "t", 1);
+		{
+			printf("%s\n", string);
+			string = ft_strdup("");
+		}
 		else
 		{
 			char *test = binary_to_char(ft_atoi(character));
 			string = ft_strjoin(string, test);
-			printf("%s\n", string);
 			free(test);
 			character = ft_strdup("");
 		}
