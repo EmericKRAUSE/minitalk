@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:07:27 by ekrause           #+#    #+#             */
-/*   Updated: 2024/03/14 11:31:38 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/03/18 09:15:01 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,12 @@ void	send_signal(char *str, pid_t pid)
 			kill(pid, SIGUSR2);
 		usleep(1000);
 		i++;
+	}
+	i = 0;
+	while (i++ < 8)
+	{
+		kill(pid, SIGUSR2);
+		usleep(1000);
 	}
 }
 
