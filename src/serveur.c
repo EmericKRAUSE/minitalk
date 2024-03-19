@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 10:31:26 by ekrause           #+#    #+#             */
-/*   Updated: 2024/03/18 11:55:25 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/03/19 13:39:29 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,14 @@
 #include <string.h>
 #include "../libft/libft.h"
 
-char *character;
+
+typedef struct s_list
+{
+	char			character[9];
+	struct s_list	*next;
+}					t_list;
+
+
 char *string;
 int	bit = 0;
 
@@ -58,12 +65,12 @@ void	sig_handler(int signum)
 {
 	if (signum == SIGUSR1)
 	{
-		character = ft_strjoin(character, "1");
+		string = ft_strjoin(character, "1");
 		bit++;
 	}
 	else if (signum == SIGUSR2)
 	{
-		character = ft_strjoin(character, "0");
+		string = ft_strjoin(character, "0");
 		bit++;
 	}
 	if (bit % 8 == 0)
@@ -72,6 +79,7 @@ void	sig_handler(int signum)
 		{
 			printf("%s\n", string);
 			string = ft_strdup("");
+
 		}
 		else
 		{
@@ -79,8 +87,7 @@ void	sig_handler(int signum)
 			string = ft_strjoin(string, test);
 			free(test);
 			character = ft_strdup("");
-		}
-			
+		}	
 	}
 }
 
