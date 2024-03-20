@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:07:27 by ekrause           #+#    #+#             */
-/*   Updated: 2024/03/19 10:18:24 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/03/20 14:11:01 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
+#include "../libft/libft.h"
 
 int	ft_count(char c)
 {
@@ -28,16 +29,6 @@ int	ft_count(char c)
 		nb /= 2;
 		i++;
 	}
-	return (i);
-}
-
-int	ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
 	return (i);
 }
 
@@ -83,14 +74,14 @@ void	send_signal(char *str, pid_t pid)
 			kill(pid, SIGUSR1);
 		else if (str[i] == '0')
 			kill(pid, SIGUSR2);
-		usleep(100);
+		usleep(500);
 		i++;
 	}
 	i = 0;
 	while (i++ < 8)
 	{
 		kill(pid, SIGUSR2);
-		usleep(100);
+		usleep(500);
 	}
 }
 
