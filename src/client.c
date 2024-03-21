@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:07:27 by ekrause           #+#    #+#             */
-/*   Updated: 2024/03/20 14:11:01 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/03/21 11:45:57 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,50 +17,25 @@
 #include <stdlib.h>
 #include "../libft/libft.h"
 
-int	ft_count(char c)
+void	send_bit(char c, pid_t pid)
 {
-	int	i;
-	int	nb;
+	int bit;
 
-	i = 0;
-	nb = (int)c;
-	while (nb != 0)
+	bit = 7;
+	while (bit >= 0)
 	{
-		nb /= 2;
-		i++;
-	}
-	return (i);
-}
-
-char	*str_to_binary(char *str)
-{
-	char	*result;
-	int		len;
-	int		i;
-	int		j;
-	int		nb;
-
-	len = (8 * ft_strlen(str));
-	result = malloc(sizeof(char) * (len + 1));
-	if (!result)
-		return (NULL);
-	j = 0;
-	while (j < len)
-		result[j++] = '0';
-	result[j] = '\0';
-	j = 0;
-	while (str[j])
-	{
-		i = 7 + (j * 8);
-		nb = (int)str[j];
-		while (nb != 0)
+		if (kill(pid, 0) < 0)
 		{
-			result[i--] = (nb % 2) + 48;
-			nb /= 2;
+			ft_putendl_fd ("ERROR : cant send sig to pid", 1);
+			exit(EXIT_FAILURE);
 		}
-		j++;
+		if (c & (1 << bit))
+			kill(pid, SIGUSR1);
+		else
+			kill(pid, SIGUSR2);
+		bit--;
+		usleep(1000);
 	}
-	return(result);
 }
 
 void	send_signal(char *str, pid_t pid)
@@ -70,30 +45,17 @@ void	send_signal(char *str, pid_t pid)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '1')
-			kill(pid, SIGUSR1);
-		else if (str[i] == '0')
-			kill(pid, SIGUSR2);
-		usleep(500);
+		send_bit(str[i], pid);
 		i++;
-	}
-	i = 0;
-	while (i++ < 8)
-	{
-		kill(pid, SIGUSR2);
-		usleep(500);
 	}
 }
 
 int main(int argc, char **argv)
 {
 	pid_t	pid;
-	char	*str;
 	if (argc != 3)
 		return (1);
-	pid = atoi(argv[1]);
-	str = str_to_binary(argv[2]);
-	send_signal(str, pid);
-	free(str);
+	pid = ft_atoi(argv[1]);
+	send_signal(argv[2], pid);
 	return (0);
 }
