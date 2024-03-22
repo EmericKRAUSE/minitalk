@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 10:31:26 by ekrause           #+#    #+#             */
-/*   Updated: 2024/03/21 13:27:18 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/03/22 13:41:27 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,26 +17,24 @@
 #include <string.h>
 #include "../libft/libft.h"
 
-void	sig_handler(int signal)
+void	sig_handler(int signal, siginfo_t *info, void *context)
 {
 	static char c = 0;
-	static	int bit = 7;
+	static	int bit = -1;
 
+	if (bit < 0)
+		bit = 7;
 	if (signal == SIGUSR1)
 		c |= 1 << bit;
 	else if (signal == SIGUSR2)
 		c &= ~(1 << bit);
-	if (bit == 0)
-	{
-		write(1,&c, 1);
-		bit = 7;
-		c = 0;
-	}
-	else
-		bit--;
+	if (!bit)
+		ft_putchar_fd(c, 1);
+	bit--;
+	kill(info->si_pid, SIGUSR1);
 }
 
-int	main()
+int	main(void)
 {
 	pid_t	pid;
 
@@ -44,9 +42,9 @@ int	main()
 	ft_putendl_fd("PID : ", 1);
 	ft_putnbr_fd(pid, 1);
 	ft_putendl_fd("\n\nMessage : ", 1);
-	signal(SIGUSR1, sig_handler);
-	signal(SIGUSR2, sig_handler);
+	sigaction(SIGUSR1, sig_handler);
+	sigaction(SIGUSR2, sig_handler);
 	while (1)
-		pause();
+		sleep(1);
 	return (0);
 }

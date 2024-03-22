@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:07:27 by ekrause           #+#    #+#             */
-/*   Updated: 2024/03/21 11:45:57 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/03/22 13:30:23 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <signal.h>
 #include <stdlib.h>
 #include "../libft/libft.h"
+
+int	g_control;
 
 void	send_bit(char c, pid_t pid)
 {
@@ -34,7 +36,8 @@ void	send_bit(char c, pid_t pid)
 		else
 			kill(pid, SIGUSR2);
 		bit--;
-		usleep(1000);
+		while (g_control != 1)
+			usleep(10);
 	}
 }
 
@@ -50,12 +53,36 @@ void	send_signal(char *str, pid_t pid)
 	}
 }
 
+void	sig_usr(int signal)
+{
+	if (signal == SIGUSR1)
+		g_control = 1;
+	else if (signal == SIGUSR2)
+	{
+		ft_putendl_fd("Message received !", 1);
+		exit(EXIT_SUCCESS);
+	}
+}
+
 int main(int argc, char **argv)
 {
 	pid_t	pid;
+
 	if (argc != 3)
-		return (1);
+	{
+		ft_putendl_fd("Usage : ./client <pid> <string>", 1);
+		exit(EXIT_FAILURE);
+	}
+	signal(SIGUSR1, sig_usr);
+	signal(SIGUSR2, sig_usr);
 	pid = ft_atoi(argv[1]);
+	if (!pid)
+	{
+		ft_putendl_fd("Invalid PID", 1);
+		exit(EXIT_FAILURE);
+	}
 	send_signal(argv[2], pid);
+	while (1)
+		sleep(1);
 	return (0);
 }
