@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 10:31:26 by ekrause           #+#    #+#             */
-/*   Updated: 2024/03/22 13:41:27 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/03/25 14:13:57 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@
 #include <string.h>
 #include "../libft/libft.h"
 
-void	sig_handler(int signal, siginfo_t *info, void *context)
+int		p = 0;
+char	pid[8];
+
+void	sig_handler(int signal)
 {
 	static char c = 0;
 	static	int bit = -1;
@@ -28,10 +31,21 @@ void	sig_handler(int signal, siginfo_t *info, void *context)
 		c |= 1 << bit;
 	else if (signal == SIGUSR2)
 		c &= ~(1 << bit);
-	if (!bit)
+	if (!bit && p >= 7)
+	{
 		ft_putchar_fd(c, 1);
+		usleep(10000);
+		kill(atoi(pid), SIGUSR1);
+	}
+	if (!bit && p < 7)
+	{
+		pid[p] = c;
+		p++;
+		if (p == 7)
+			pid[p] = '\0';
+		write(1, "c", 1);
+	}
 	bit--;
-	kill(info->si_pid, SIGUSR1);
 }
 
 int	main(void)
@@ -42,8 +56,8 @@ int	main(void)
 	ft_putendl_fd("PID : ", 1);
 	ft_putnbr_fd(pid, 1);
 	ft_putendl_fd("\n\nMessage : ", 1);
-	sigaction(SIGUSR1, sig_handler);
-	sigaction(SIGUSR2, sig_handler);
+	signal(SIGUSR1, sig_handler);
+	signal(SIGUSR2, sig_handler);
 	while (1)
 		sleep(1);
 	return (0);
