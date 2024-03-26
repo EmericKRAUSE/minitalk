@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 10:31:26 by ekrause           #+#    #+#             */
-/*   Updated: 2024/03/25 14:13:57 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/03/26 14:12:45 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,20 +31,22 @@ void	sig_handler(int signal)
 		c |= 1 << bit;
 	else if (signal == SIGUSR2)
 		c &= ~(1 << bit);
-	if (!bit && p >= 7)
-	{
+	if (!bit && c && p >= 7)
 		ft_putchar_fd(c, 1);
-		usleep(10000);
-		kill(atoi(pid), SIGUSR1);
-	}
+	else if (!bit && !c && p >= 7)
+		kill(atoi(pid), SIGUSR2);
 	if (!bit && p < 7)
 	{
 		pid[p] = c;
 		p++;
 		if (p == 7)
+		{
 			pid[p] = '\0';
-		write(1, "c", 1);
+			c = 0;
+		}
 	}
+	if (p >= 7)
+		kill(atoi(pid), SIGUSR1);
 	bit--;
 }
 
@@ -59,6 +61,6 @@ int	main(void)
 	signal(SIGUSR1, sig_handler);
 	signal(SIGUSR2, sig_handler);
 	while (1)
-		sleep(1);
+		pause();
 	return (0);
 }

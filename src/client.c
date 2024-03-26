@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:07:27 by ekrause           #+#    #+#             */
-/*   Updated: 2024/03/25 14:13:05 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/03/26 15:06:20 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	send_bit(char c, pid_t pid)
 		bit--;
 		while (g_control != 1)
 			pause();
+		usleep(500);
 	}
 }
 
@@ -60,7 +61,7 @@ void	send_pid(char c, pid_t pid)
 		else
 			kill(pid, SIGUSR2);
 		bit--;
-			usleep(1000);
+		usleep(10000);
 	}
 }
 
@@ -80,6 +81,7 @@ void	send_signal(char *my_pid, char *str, pid_t pid)
 		send_bit(str[i], pid);
 		i++;
 	}
+	send_bit(0, pid);
 }
 
 void	sig_usr(int signal)
@@ -103,6 +105,8 @@ int main(int argc, char **argv)
 		ft_putendl_fd("Usage : ./client <pid> <string>", 1);
 		exit(EXIT_FAILURE);
 	}
+	signal(SIGUSR1, sig_usr);
+	signal(SIGUSR2, sig_usr);
 	pid = ft_atoi(argv[1]);
 	if (!pid)
 	{
@@ -110,8 +114,8 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	my_pid = ft_itoa(getpid());
-	signal(SIGUSR1, sig_usr);
-	signal(SIGUSR2, sig_usr);
 	send_signal(my_pid, argv[2], pid);
+	while (1)
+		pause();
 	return (0);
 }
