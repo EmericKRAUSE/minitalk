@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 10:31:26 by ekrause           #+#    #+#             */
-/*   Updated: 2024/03/26 14:12:45 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/04/02 14:10:25 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@
 #include <string.h>
 #include "../libft/libft.h"
 
-int		p = 0;
 char	pid[8];
 
 void	sig_handler(int signal)
 {
 	static char c = 0;
 	static	int bit = -1;
+	static int p = 0;
 
 	if (bit < 0)
 		bit = 7;
@@ -34,7 +34,12 @@ void	sig_handler(int signal)
 	if (!bit && c && p >= 7)
 		ft_putchar_fd(c, 1);
 	else if (!bit && !c && p >= 7)
+	{
+		p = 0;
+		c = 0;
+		bit = -1;
 		kill(atoi(pid), SIGUSR2);
+	}
 	if (!bit && p < 7)
 	{
 		pid[p] = c;
@@ -61,6 +66,6 @@ int	main(void)
 	signal(SIGUSR1, sig_handler);
 	signal(SIGUSR2, sig_handler);
 	while (1)
-		pause();
+		sleep(1);
 	return (0);
 }

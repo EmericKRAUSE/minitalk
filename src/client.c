@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:07:27 by ekrause           #+#    #+#             */
-/*   Updated: 2024/03/26 15:06:20 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/04/02 14:06:11 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	send_bit(char c, pid_t pid)
 		bit--;
 		while (g_control != 1)
 			pause();
-		usleep(500);
+		usleep(100);
 	}
 }
 
@@ -61,7 +61,7 @@ void	send_pid(char c, pid_t pid)
 		else
 			kill(pid, SIGUSR2);
 		bit--;
-		usleep(10000);
+		usleep(2000);
 	}
 }
 
@@ -116,6 +116,6 @@ int main(int argc, char **argv)
 	my_pid = ft_itoa(getpid());
 	send_signal(my_pid, argv[2], pid);
 	while (1)
-		pause();
+		sleep(1);
 	return (0);
 }
