@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 10:31:26 by ekrause           #+#    #+#             */
-/*   Updated: 2024/04/03 11:11:46 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/04/04 14:15:23 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ void	sig_handler(int signal)
 			c = 0;
 		}
 	}
+	bit--;
 	if (p >= 7)
 		kill(atoi(pid), SIGUSR1);
-	bit--;
 }
 
 int	main(void)
