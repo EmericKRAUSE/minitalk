@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 10:31:26 by ekrause           #+#    #+#             */
-/*   Updated: 2024/04/04 14:15:23 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/04/05 14:13:39 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,9 @@
 #include <string.h>
 #include "../libft/libft.h"
 
-char	pid[8];
-char	*message;
+char	*g_message;
 
-char *add_char(char *str, char c)
+char	*add_char(char *str, char c)
 {
 	char	*result;
 	int		i;
@@ -42,14 +41,38 @@ char *add_char(char *str, char c)
 	return (result);
 }
 
+void	end_of_message(char	*c, int *bit, int *p, char pid[8])
+{
+	(*c) = 0;
+	(*bit) = -1;
+	(*p) = 0;
+	ft_putendl_fd(g_message, 1);
+	free(g_message);
+	g_message = NULL;
+	kill(atoi(pid), SIGUSR2);
+}
+
+void	fill_pid(char pid[8], int *p, char *c)
+{
+	pid[(*p)++] = *c;
+	if ((*p) == 7)
+	{
+		pid[*p] = '\0';
+		(*c) = 0;
+	}
+}
+
 void	sig_handler(int signal)
 {
-	static char c = 0;
-	static	int bit = -1;
-	static int p = 0;
+	static char	c = 0;
+	static int	bit = -1;
+	static int	p = 0;
+	static char	pid[8];
 
-	if (!message)
-		message = ft_strdup("");
+	if (bit < 0 && !c && p >= 7)
+		ft_putendl_fd("\033[36mClient say:\033[0m", 1);
+	if (!g_message)
+		g_message = ft_strdup("");
 	if (bit < 0)
 		bit = 7;
 	if (signal == SIGUSR1)
@@ -57,28 +80,11 @@ void	sig_handler(int signal)
 	else if (signal == SIGUSR2)
 		c &= ~(1 << bit);
 	if (!bit && c && p >= 7)
-		message = add_char(message, c);
+		g_message = add_char(g_message, c);
 	else if (!bit && !c && p >= 7)
-	{
-		p = 0;
-		c = 0;
-		bit = -1;
-		ft_putendl_fd(message, 1);
-		free(message);
-		message = NULL;
-		kill(atoi(pid), SIGUSR2);
-	}
-	if (!bit && p < 7)
-	{
-		pid[p] = c;
-		p++;
-		if (p == 7)
-		{
-			pid[p] = '\0';
-			c = 0;
-		}
-	}
-	bit--;
+		end_of_message(&c, &bit, &p, pid);
+	if (!bit-- && p < 7)
+		fill_pid(pid, &p, &c);
 	if (p >= 7)
 		kill(atoi(pid), SIGUSR1);
 }

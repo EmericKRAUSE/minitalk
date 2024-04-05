@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:07:27 by ekrause           #+#    #+#             */
-/*   Updated: 2024/04/04 15:05:45 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/04/05 13:49:30 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	g_control;
 
 void	send_bit(char c, pid_t pid)
 {
-	int bit;
+	int	bit;
 
 	bit = 7;
 	while (bit >= 0)
@@ -38,14 +38,13 @@ void	send_bit(char c, pid_t pid)
 			kill(pid, SIGUSR2);
 		bit--;
 		while (g_control != 1)
-			pause();
-		usleep(100);
+			usleep(1);
 	}
 }
 
 void	send_pid(char c, pid_t pid)
 {
-	int bit;
+	int	bit;
 
 	bit = 7;
 	while (bit >= 0)
@@ -55,7 +54,6 @@ void	send_pid(char c, pid_t pid)
 			ft_putendl_fd ("ERROR : cant send sig to pid", 1);
 			exit(EXIT_FAILURE);
 		}
-		g_control = 0;
 		if (c & (1 << bit))
 			kill(pid, SIGUSR1);
 		else
@@ -95,7 +93,7 @@ void	sig_usr(int signal)
 	}
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	pid_t	pid;
 	char	*my_pid;
@@ -116,6 +114,6 @@ int main(int argc, char **argv)
 	my_pid = ft_itoa(getpid());
 	send_signal(my_pid, argv[2], pid);
 	while (1)
-		pause();
+		sleep(1);
 	return (0);
 }
