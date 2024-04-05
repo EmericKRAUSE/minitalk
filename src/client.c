@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:07:27 by ekrause           #+#    #+#             */
-/*   Updated: 2024/04/05 14:20:31 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/04/05 14:50:50 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	send_bit(char c, pid_t pid)
 			kill(pid, SIGUSR2);
 		bit--;
 		while (g_control != 1)
-			usleep(1);
+			usleep(10);
 	}
 }
 
@@ -68,6 +68,7 @@ void	send_signal(char *my_pid, char *str, pid_t pid)
 		send_pid(my_pid[i], pid);
 		i++;
 	}
+	free(my_pid);
 	i = 0;
 	while (str[i])
 	{
