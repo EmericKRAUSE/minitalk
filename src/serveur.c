@@ -6,16 +6,11 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 10:31:26 by ekrause           #+#    #+#             */
-/*   Updated: 2024/04/05 14:13:39 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/04/05 14:20:38 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <signal.h>
-#include <string.h>
-#include "../libft/libft.h"
+#include "../include/minitalk.h"
 
 char	*g_message;
 

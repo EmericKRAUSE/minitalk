@@ -6,16 +6,11 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 11:07:27 by ekrause           #+#    #+#             */
-/*   Updated: 2024/04/05 13:49:30 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/04/05 14:20:31 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <signal.h>
-#include <stdlib.h>
-#include "../libft/libft.h"
+#include "../include/minitalk.h"
 
 int	g_control;
 
