@@ -444,11 +444,3 @@ if [ "$(./client "$1" "$test7")" = "$expected_output" ]; then
 else
 	echo -e "\tTest 7 : \033[31mFailure\033[0m ❌\n"
 fi
-
-echo -e "\tTest showing the client response:"
-./client "$1" "$test1"
-if [ "$(./client "$1" "$test1")" = "$expected_output" ]; then
-	echo -e "\tTest 8 : \033[32mSuccess\033[0m ✅\n"
-else
-	echo -e "\tTest 8 : \033[31mFailure\033[0m ❌\n"
-fi
