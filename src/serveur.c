@@ -6,7 +6,7 @@
 /*   By: ekrause <emeric.yukii@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 10:31:26 by ekrause           #+#    #+#             */
-/*   Updated: 2024/04/05 14:51:39 by ekrause          ###   ########.fr       */
+/*   Updated: 2024/04/08 15:10:47 by ekrause          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	end_of_message(char	*c, int *bit, int *p, char pid[8])
 	ft_putendl_fd(g_message, 1);
 	free(g_message);
 	g_message = NULL;
-	kill(atoi(pid), SIGUSR2);
+	kill(ft_atoi(pid), SIGUSR2);
 }
 
 void	fill_pid(char pid[8], int *p, char *c)
@@ -81,7 +81,7 @@ void	sig_handler(int signal)
 	if (!bit-- && p < 7)
 		fill_pid(pid, &p, &c);
 	if (p >= 7)
-		kill(atoi(pid), SIGUSR1);
+		kill(ft_atoi(pid), SIGUSR1);
 }
 
 int	main(void)
